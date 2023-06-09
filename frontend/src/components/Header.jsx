@@ -10,15 +10,15 @@ const Header = () => {
     <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
      <Container>
       <LinkContainer to='/'>
-      <Navbar.Brand href="/">E-shop
-      <img src={logo} alt=""/>
+      <Navbar.Brand>
+      <img src={logo} alt="E-Shop" />
       </Navbar.Brand>
       </LinkContainer>
       <Navbar.Toggle aria-aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ms-auto">
           <LinkContainer to='/cart'>
-            <Nav.Link href="/cart">
+            <Nav.Link>
               <FaShoppingCart /> Cart
             </Nav.Link>
           </LinkContainer>
@@ -27,7 +27,6 @@ const Header = () => {
               <FaUser /> Sign In
             </Nav.Link>
           </LinkContainer>
-          
         </Nav>
       </Navbar.Collapse>
      </Container>
