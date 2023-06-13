@@ -1,16 +1,32 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 // get the ID from URL with hook useParams
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Row, Col, Image, ListGroup, Card, Button, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import Rating from '../components/Rating';
-import products from '../products';
+//import products from '../products';  // (for fetching from json file locally - for check) (bring from axios instead)
+import axios from 'axios';
+
 
 const ProductScreen = () => {
+  
+  const [product, setProduct] = useState({});
   // get the ID from URL
   const { id: productId } = useParams();
-  const product = products.find((p) => p._id === productId)
-  //console.log(product);
+  // const product = products.find((p) => p._id === productId) // use axios instead for fetching
+
+useEffect(() => {
+    const fetchProduct = async () => {
+    const { data } = await axios.get(`/api/products/${productId}`);
+    setProduct(data);
+    }
+
+    fetchProduct();
+}, [productId]);
+// useEffect will run and update on every change of productId
+  
+
   return (
     <>
       <Link className="btn btn-light my-3" to="/">Go Back</Link>
