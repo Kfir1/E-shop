@@ -1,6 +1,3 @@
-import products from './data/products.js';
-// since ES modules on backend, have to use 
-// (products.js) and just products for my own javascript modules
 import express from 'express';
 // could use common.js syntax instead of module 
 // (import express from 'express';) and write
@@ -8,6 +5,10 @@ import express from 'express';
 // need to change type in root package.json (type: commonjs)
 import dotenv from 'dotenv';
 dotenv.config(); // needs to be below (import dotenv from 'dotenv';)
+import products from './data/products.js';
+// since ES modules on backend, have to use 
+// (products.js) and just products for my own javascript modules
+import connectDB from './config/db.js';
 
 
 // create variable for port
@@ -16,6 +17,8 @@ dotenv.config(); // needs to be below (import dotenv from 'dotenv';)
 // added enviroment variables on file .env
 // default port number will be PORT
 const port = process.env.PORT || 5000;
+
+connectDB(); // connect to MongoDB
 
 // initialize express
 const app = express();
