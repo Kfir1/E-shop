@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config(); // needs to be below (import dotenv from 'dotenv';)
 import productRoutes from './routes/productRoutes.js'
 import connectDB from './config/db.js';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 
 // create variable for port
@@ -28,6 +29,9 @@ app.get('/', (req, res) => {
 
 // every time this route is running '/api/products', will use (productRoutes) file
 app.use('/api/products', productRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 // start the server
 app.listen(port, () => console.log(`Server running on port ${port}`));
