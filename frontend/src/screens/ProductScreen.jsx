@@ -1,36 +1,28 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
 // get the ID from URL with hook useParams
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import Rating from '../components/Rating';
-//import products from '../products';  // (for fetching from json file locally - for check) (bring from axios instead)
-import axios from 'axios';
+import { useGetProductsDetailsQuery } from '../slices/productApiSlice';
 
 
 const ProductScreen = () => {
-  
-  const [product, setProduct] = useState({});
-  // get the ID from URL
+  // get the ID from URL (by hook)
   const { id: productId } = useParams();
-  // const product = products.find((p) => p._id === productId) // use axios instead for fetching
 
-useEffect(() => {
-    const fetchProduct = async () => {
-    const { data } = await axios.get(`/api/products/${productId}`);
-    setProduct(data);
-    }
-
-    fetchProduct();
-}, [productId]);
-// useEffect will run and update on every change of productId
-  
+  const { data: product, isLoading, error } = useGetProductsDetailsQuery(productId);
 
   return (
     <>
       <Link className="btn btn-light my-3" to="/">Go Back</Link>
-      <Row>
+
+      { isLoading  ? (
+        <h2>Loading...</h2>
+        ) : error ? (
+        <div>{error?.data?.message || error.error}</div>
+        ) : (
+        <Row>
         <Col md={5}>
           <Image src={product.image} alt={product.name} fluid />
         </Col>
@@ -82,6 +74,7 @@ useEffect(() => {
           </Card>
         </Col>
       </Row>
+      ) };
     </>
   )
 }
