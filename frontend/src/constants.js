@@ -1,7 +1,8 @@
 
-// ternary for production or development evniroment
-export const BASE_URL = process.env.NODE_ENV === 'development' ?
-'http://localhost:5000' : '';
+// ternary for production or development evniroment - if not using proxy()
+// export const BASE_URL = process.env.NODE_ENV === 'development' ?
+// 'http://localhost:5000' : '';
+export const BASE_URL = '';
 export const PRODUCTS_URL = '/api/products';
 export const USERS_URL = '/api/users';
 export const ORDERS_URL = '/api/orders';
