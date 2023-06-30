@@ -2,6 +2,7 @@ import { PRODUCTS_URL } from "../constants";
 import { apiSlice } from "./apiSlice";
 
 // instead of axios request or fetch request - use REDUX toolkit
+// these request are asynchronous
 export const productsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -10,12 +11,13 @@ export const productsApiSlice = apiSlice.injectEndpoints({
             }),
             keepUnusedDataFor: 5,
         }),
-        getProductsDetails: builder.query({
+        getProductDetails: builder.query({
             query: (productId) => ({
-                url: `${PRODUCTS_URL}/${productId}` ,
+                url: `${PRODUCTS_URL}/${productId}`,
             }),
+            keepUnusedDataFor: 5,
         })
     }),
 });
 
-export const { useGetProductsQuery, useGetProductsDetailsQuery } = productsApiSlice;
+export const { useGetProductsQuery, useGetProductDetailsQuery } = productsApiSlice;
