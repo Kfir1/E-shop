@@ -23,6 +23,10 @@ connectDB(); // connect to MongoDB
 // initialize express
 const app = express();
 
+// Body parser middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // create first route
 app.get('/', (req, res) => {
     res.send('API is running...');
