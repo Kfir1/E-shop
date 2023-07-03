@@ -3,6 +3,7 @@ import express from 'express';
 // (import express from 'express';) and write
 // const express = require('express');
 // need to change type in root package.json (type: commonjs)
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 dotenv.config(); // needs to be below (import dotenv from 'dotenv';)
 import productRoutes from './routes/productRoutes.js';
@@ -26,6 +27,9 @@ const app = express();
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// cookie parser middleware
+app.use(cookieParser());
 
 // create first route
 app.get('/', (req, res) => {
