@@ -1,6 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js"; // user model (mongoose) 
-import jwt from "jsonwebtoken";
+import generateToken from "../utils/generateToken.js";
 
 // @desc    Auth user & get token
 // @route   POST /api/users
@@ -8,26 +8,10 @@ import jwt from "jsonwebtoken";
 const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
-    if(user && (await user.matchPassword(password))) {
-        // create token
-        // send object with paylod userId
-        // send the secret to environment variables
-        // third parameter passed is expires in 30days 
-        const token = jwt.sign(
-            { userId: user._id },
-              process.env.JWT_SECRET,
-            { expiresIn: '30d'});
-
-        // set JWT as HTTP-only cookie
-        res.cookie('jwt', token, {
-            httpOnly: true,
-            // if in prodution it will be true 
-            secure: process.env.NODE_ENV !== 'development',
-            sameSite: 'strict',
-            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 Days
-        });
+    if (user && (await user.matchPassword(password))) {
+        generateToken(res, user._id); // call generateToken from generateToken.js and pass the (res, user._id) 
 
         res.json({
             _id: user._id,
@@ -45,7 +29,39 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/login
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    res.send('register user');
+    // from the request body object - get and set constants need the name, email, password of user
+    const { name, email, password } = req.body;
+
+    // get user email to check if it is already exists
+    const userExist = await User.findOne({ email });
+
+    // check if user email exists
+    if (userExist) {
+        res.status(400);
+        throw new Error('User already exist');
+    } // if exists - error
+    
+    // if user does not exist , create one with name, email, pwd 
+    const user = await User.create({
+        name,
+        email,
+        password,
+    });
+
+    // check if user is created
+    if (user) {
+        generateToken(res, user._id); // call generateToken from generateToken.js and pass the (res, user._id) 
+
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+        });
+    } else {
+        res.status(400);
+        throw new Error('Invalid user data');
+    }
 });
 
 // @desc    Logout user / clear cookie
