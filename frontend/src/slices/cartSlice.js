@@ -8,8 +8,8 @@ import { updateCart } from "../utils/cartUtils";
 // (see initialState in cartSlice)
 const initialState = localStorage.getItem("cart") ? 
 JSON.parse(localStorage.getItem("cart")) : 
-{cartItems: [], };
-
+{cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
+// shippingAddress{} need to be saved
 
 const cartSlice = createSlice({
     name: "cart",
@@ -38,9 +38,13 @@ const cartSlice = createSlice({
             
             return updateCart(state);
         },
+        saveShippingAddress: (state, action) => {
+            state.saveShippingAddress = action.payload;
+            return updateCart(state);
+        }
     },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress } = cartSlice.actions;
 
 export default cartSlice.reducer;
