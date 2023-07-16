@@ -1,6 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap';
 
-const FormContainer = ({ children }) => {
+// children will enable to render elements within the FormContainer component 
+const FormContainer = ({ children }) => { 
   return (
     <Container>
       <Row className="justify-content-md-center">
