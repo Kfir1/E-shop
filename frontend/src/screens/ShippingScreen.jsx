@@ -11,9 +11,13 @@ const ShippingScreen = () => {
   // get cart state with useSelector
   const cart = useSelector((state) => state.cart); // need to be above useState
   // destructure the shipping address from the cart
-  const { shippingAddress } = cart; // need to be above useState
+  const { shippingAddress } = cart; // need to be above useState. get shippingAddress from cartSlice
 
-  const [address, setAddress] = useState(shippingAddress?.Address || '');
+  // use ? because error "cannot read properties of undefined"
+  // because the default in state in useState is shippingAddress etc',
+  // the address, postalCode, city, country will remain in form,
+  // even after refreshing or going to another page and get back  useState(shippingAddress?.address || '');   
+  const [address, setAddress] = useState(shippingAddress?.address || '');
   const [city, setCity] = useState(shippingAddress?.city || '');
   const [postalCode, setPostalCode] = useState(shippingAddress?.postalCode || '');
   const [country, setCountry] = useState(shippingAddress?.country || '');
@@ -26,7 +30,7 @@ const ShippingScreen = () => {
     // put Address, city, postalCode, country in local storage and state
     dispatch(saveShippingAddress({ address, city, postalCode, country}));
     navigate('/payment');
-  }
+  };
 
   return (
     <FormContainer>

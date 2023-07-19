@@ -1,6 +1,7 @@
 import { USERS_URL } from "../constants";
 import { apiSlice } from "./apiSlice";
 
+// products in users apiSlice are children of apiSlice
 // instead of axios request or fetch request - use REDUX toolkit
 // these request are asynchronous
 export const usersApiSlice = apiSlice.injectEndpoints({
