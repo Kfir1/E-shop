@@ -9,7 +9,8 @@ import {
     getUsers,
     getUserById,
     deleteUser,
-    updateUser, } from "../controllers/userController.js";
+    updateUser, 
+} from "../controllers/userController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
 // to protect certain routes - use protect middleware
