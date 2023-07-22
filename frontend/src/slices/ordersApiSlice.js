@@ -16,7 +16,7 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
                 url: `${ORDERS_URL}/${orderId}`,
                 // no need for method bacause it is GET by default
             }),
-            keepUnusedDataFor: 5
+            keepUnusedDataFor: 5  // keep data for 5 seconds
         })
     }),
 }); 

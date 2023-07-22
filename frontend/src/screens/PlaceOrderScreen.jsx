@@ -86,7 +86,7 @@ const PlaceOrderScreen = () => {
                               />
                             </Col>
                             <Col>
-                              <Link to={`/products/${item.product}`}>
+                              <Link to={`/product/${item._id}`}>
                                 {item.name}
                               </Link>
                             </Col>
@@ -144,7 +144,7 @@ const PlaceOrderScreen = () => {
                     </ListGroup.Item>
                     
                     <ListGroup.Item>
-                      { error?.message && <Message variant='danger'>{error?.message}</Message> }
+                      { error && <Message variant='danger'>{error}</Message> }
                     </ListGroup.Item>
 
                     <ListGroup.Item>
