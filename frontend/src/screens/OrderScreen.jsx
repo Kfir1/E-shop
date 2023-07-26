@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom"; //useParams will get the order id from the url
 import {
       Row,
@@ -9,9 +10,16 @@ import {
       Card,
       ListGroupItem, 
 } from "react-bootstrap";
+import { toast } from 'react-toastify';
+import { useSelector } from "react-redux";
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { useGetOrderDetailsQuery } from "../slices/ordersApiSlice"; // to get data from data base
+import { 
+   useGetOrderDetailsQuery,
+   usePayOrderMutation,
+   useGetPayPalClientIdQuery, 
+} from "../slices/ordersApiSlice"; // to get data from data base
 
 const OrderScreen = () => {
     // get order id that comes from the url (renamed it to orderId to be more specific)
@@ -19,9 +27,55 @@ const OrderScreen = () => {
 
     // get data (re named to order) 
     // refetch to get new data (prevent not getting new data - can happen)
-    const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
-  
-    console.log(order);
+    const {
+        data: order,
+        refetch,
+        isLoading,
+        error 
+    } = useGetOrderDetailsQuery(orderId);
+
+    // rename isLoading because it is already exist on another query (useGetOrderDetailsQuery)
+    const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+    // rename data, isLoading, error, cause alread using same syntax on another query
+    const {
+       data: paypal,
+       isLoading: loadingPayPal,
+       error: errorPayPal,
+    } = useGetPayPalClientIdQuery();
+
+    // get user data
+    const { userInfo } = useSelector((state) => state.auth);
+
+    const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
+    // use paypal-react package to load paypal script
+    useEffect(() => { // check if errorPayPal and loadingPayPal false and paypal.clientId exist 
+      if (!errorPayPal && !loadingPayPal && paypal.clientId) {
+        // then create function to  load paypal script
+        const loadPaypalScript = async () => { // read paypal documentation 
+          paypalDispatch({
+            type: 'resetOptions',
+            value: {
+              'client-id': paypal.clientId,
+              currency: 'USD', 
+            },
+          });
+          paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+        }
+        if ( order && !order.isPaid ) { // if the order exist but order is not paid - want to load the script
+          if ( !window.paypal ) { // check if script not already loaded 
+            loadPaypalScript(); // if not then load it
+          }
+        }
+      }
+    }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
+
+    function onApprove() {}
+    function onApproveTest() {}
+    function onError() {}
+    function createOrder() {}
+
     return isLoading ? (
         <Loader />
         ) : error ? (
@@ -119,7 +173,30 @@ const OrderScreen = () => {
                       <Col>${order.totalPrice}</Col>
                     </Row>
                   </ListGroup.Item>
-                  { /* PAY ORDER PLACEHOLDER */}
+                  
+                  { !order.isPaid && (
+                    <ListGroup.Item>
+                      { loadingPay && <Loader />}
+
+                      {isPending ? <Loader /> : (
+                        <div>
+                          <Button 
+                            onClick={ onApproveTest }
+                            style={{marginBottom: '10px'}}
+                            >
+                            Test Pay Order
+                          </Button>
+                          <div>
+                            <PayPalButtons 
+                              createOrder={createOrder}
+                              onApprove={onApprove}
+                              onError={onError}
+                            ></PayPalButtons>
+                          </div>
+                        </div>
+                      )}
+                    </ListGroup.Item>
+                  )}
                   { /* MARK DELIVERED PLACEHOLDER */}
                 </ListGroup>
               </Card>

@@ -1,5 +1,5 @@
 import { apiSlice } from './apiSlice'; // apiSlice is parent for productApiSlice, usersApiSlice, orderApiSlice
-import { ORDERS_URL } from '../constants'; // order URL from constants
+import { ORDERS_URL, PAYPAL_URL } from '../constants'; // order URL from constants, PAYPAL_URL to get client id from backend
 
 // injecting endpoints to apiSlice.js -  endpoints: (builder) => ({}),
 export const ordersApiSlice = apiSlice.injectEndpoints({
@@ -14,9 +14,23 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
         getOrderDetails: builder.query({
             query: (orderId) => ({
                 url: `${ORDERS_URL}/${orderId}`,
-                // no need for method bacause it is GET by default
+                // no need for method definition bacause it is GET by default
             }),
             keepUnusedDataFor: 5  // keep data for 5 seconds
+        }),
+        payOrder: builder.mutation({
+            // need to destructure ({orderId, details}) and not pass it directly (orderId, details)
+            query: ({orderId, details}) =>({
+                url: `${ORDERS_URL}/${orderId}/pay`,
+                method: 'PUT',
+                body: { ...details }
+            }),
+        }),
+        getPayPalClientId: builder.query({
+            query: () => ({
+                url: PAYPAL_URL,
+            }),
+            keepUnusedDataFor: 5
         })
     }),
 }); 
@@ -25,5 +39,7 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
 // use    CreateOrder   Mutation - adding to CreateOrder 
 export const {
      useCreateOrderMutation,
-     useGetOrderDetailsQuery 
+     useGetOrderDetailsQuery,
+     usePayOrderMutation,
+     useGetPayPalClientIdQuery,
     } = ordersApiSlice;
