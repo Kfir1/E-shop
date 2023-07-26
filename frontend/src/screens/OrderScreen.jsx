@@ -71,10 +71,46 @@ const OrderScreen = () => {
       }
     }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
 
-    function onApprove() {}
-    function onApproveTest() {}
-    function onError() {}
-    function createOrder() {}
+    function onApprove(data, actions) {
+      // then(async function (details) PROMISE with a function with details that comes from paypal
+      // async function cause it returns a PROMISE 
+      return actions.order.capture().then(async function (details) {
+        try {
+          // call payOrder from usePayOrderMutation and pass it object { orderId, details } from paypal
+          await payOrder({ orderId, details });
+          // refetch data and mark order as paid instead of not paid
+          refetch();
+          toast.success('Payment successful');
+        } catch (err) {
+          toast.error(err?.data?.message || err.message)
+        }
+       });
+    }
+    async function onApproveTest() {
+      // not getting details from paypal on this funcion, so set it to object with payer key with empty object
+      await payOrder({ orderId, details: { payer: {} } });
+      // refetch data and mark order as paid instead of not paid
+      refetch();
+      toast.success('Payment successful');
+    }
+
+    function onError(err) {
+      toast.error(err.message);
+    }
+
+    function createOrder(data, actions) {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: order.totalPrice,
+            },
+          },
+        ],
+      }).then((orderId) => {
+        return orderId;
+      });
+    }
 
     return isLoading ? (
         <Loader />
@@ -180,12 +216,12 @@ const OrderScreen = () => {
 
                       {isPending ? <Loader /> : (
                         <div>
-                          <Button 
+                          {/* <Button 
                             onClick={ onApproveTest }
                             style={{marginBottom: '10px'}}
                             >
                             Test Pay Order
-                          </Button>
+                          </Button> */}
                           <div>
                             <PayPalButtons 
                               createOrder={createOrder}
