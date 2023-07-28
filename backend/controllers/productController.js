@@ -47,4 +47,40 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct);
 }); // route for that funtion in routes productRoutes
 
-export { getProducts, getProductsById, createProduct };
+// @desc    Update a product
+// @route   PUT /api/products/:id
+// @access  Private/Admin
+const updateProduct = asyncHandler(async (req, res) => {
+  // get the data from the body - destructure the data needed from body
+  const {
+     name,
+     price,
+     description,
+     image,
+     brand,
+     category,
+     countInStock,
+    } = req.body;
+
+    // find the product to update by id
+    const product = await Product.findById(req.params.id);
+
+    // if product exist then update the fields coming from the form
+    if (product) {
+      product.name = name;
+      product.price = price;
+      product.description = description;
+      product.image = image;
+      product.brand = brand;
+      product.category = category;
+      product.countInStock = countInStock;
+
+      const updatedProduct = await product.save();
+      res.json(updatedProduct);
+    } else { // if product not found then throw error
+      res.status(404);
+      throw new Error('Resource not found');
+    }
+}); // a for updateProduct is created on productRoutes
+
+export { getProducts, getProductsById, createProduct, updateProduct };
