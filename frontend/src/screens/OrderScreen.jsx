@@ -18,13 +18,13 @@ import Loader from "../components/Loader";
 import { 
    useGetOrderDetailsQuery,
    usePayOrderMutation,
-   useGetPayPalClientIdQuery, 
+   useGetPayPalClientIdQuery,
+   useDeliverOrderMutation,
 } from "../slices/ordersApiSlice"; // to get data from data base
 
 const OrderScreen = () => {
     // get order id that comes from the url (renamed it to orderId to be more specific)
     const { id: orderId } = useParams();
-
     // get data (re named to order) 
     // refetch to get new data (prevent not getting new data - can happen)
     const {
@@ -36,6 +36,9 @@ const OrderScreen = () => {
 
     // rename isLoading because it is already exist on another query (useGetOrderDetailsQuery)
     const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+    // rename isLoading to loadingDeliver
+    const [deliverOrder, { isLoading: loadingDeliver}] = useDeliverOrderMutation();
 
     // rename data, isLoading, error, cause alread using same syntax on another query
     const {
@@ -112,6 +115,20 @@ const OrderScreen = () => {
       });
     }
 
+    const deliverOrderHandler = async () => {
+      try {
+        // awaiting on deliverOrder from orderApiSlice
+        // orderApiSlice communicate with the backend (mutation)
+        // pass the orderId
+        await deliverOrder(orderId);
+        refetch(); // refetch because changing from red color message to green
+                   // update the page and data base aswell
+        toast.success('Order delivered');
+      } catch (err) {
+        toast.error(err?.data?.message || err.message);
+      }
+    }
+
     return isLoading ? (
         <Loader />
         ) : error ? (
@@ -136,7 +153,7 @@ const OrderScreen = () => {
                     { order.shippingAddress.postalCode }, { order.shippingAddress.country }
                   </p>
                   { order.isDelivered ? (
-                    <Message>
+                    <Message variant='success'>
                       Delivered on { order.deliveredAt }
                     </Message>
                   ) : (
@@ -233,7 +250,23 @@ const OrderScreen = () => {
                       )}
                     </ListGroup.Item>
                   )}
-                  { /* MARK DELIVERED PLACEHOLDER */}
+                  
+                  { loadingDeliver && <Loader /> }
+                  {/* if user is admin and order is paid but not delivered show what's in listgroup item*/}
+                  { userInfo &&
+                     userInfo.isAdmin &&
+                     order.isPaid &&
+                     !order.isDelivered && (
+                      <ListGroup.Item>
+                        <Button 
+                          type="button" 
+                          className="btn btn-block"
+                          onClick={ deliverOrderHandler }
+                          >
+                            Mark As Delivered
+                        </Button>
+                      </ListGroup.Item>
+                  )}
                 </ListGroup>
               </Card>
             </Col>

@@ -83,9 +83,9 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
             email_address: req.body.payer.email_address,
         };
 
-        const updateOrder = await order.save(); // save it to database
+        const updatedOrder = await order.save(); // save it to database
 
-        res.status(200).json(updateOrder); // respond with 200 success (order exist) pass the updated order
+        res.status(200).json(updatedOrder); // respond with 200 success (order exist) pass the updated order
      }  else {
         res.status(404); // 404 order does not exist
         throw new Error('Order not found');
@@ -96,7 +96,24 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 // @route   PUT /api/orders/:id/deliver
 // @access  Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-    res.send('update order to delivered');
+    // get the order by id (pass in URL /api/orders/:id/deliver)
+    const order = await Order.findById(req.params.id);
+
+    // check if order exist
+    if (order) {
+        // if order exist set isDelivered to true and deliveredAt to current time
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+
+        // save order to data base 
+        const updatedOrder = await order.save();
+
+        // respond with saved data
+        res.status(200).json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
 });
 
 // @desc    Get all orders

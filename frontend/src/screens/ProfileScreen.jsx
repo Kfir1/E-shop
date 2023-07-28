@@ -25,7 +25,7 @@ const ProfileScreen = () => {
   const [updateProfile, { isLoading: loadingUpdateProfile }] = useProfileMutation();
 
   const { data: orders, isLoading, error } = useGetMyOrdersQuery();
-
+  
   useEffect(() => {
     if (userInfo) {
         // if userInfo exist fill in the name to current state
@@ -42,11 +42,12 @@ const ProfileScreen = () => {
         try {
             const res = await updateProfile ({
                  _id: userInfo._id,
-                 name, email,
-                 password 
+                 name,
+                 email,
+                 password, 
                 }).unwrap();
                 // set credentials to the res (response)
-                dispatch(setCredentials(res));
+                dispatch(setCredentials({ ...res }));
                 toast.success('Profile updated successfully');
         } catch (err) {
             toast.error(err?.data?.message || err.error);
@@ -127,10 +128,10 @@ const ProfileScreen = () => {
             </thead>
             <tbody>
               { orders.map((order) => (
-                <tr key={order._id}>
+                <tr key={ order._id }>
                   <td>{ order._id }</td>
-                  <td>{ order.createdAt.substring(0, 10)}</td>
-                  <td>${ order.totalPrice}</td>
+                  <td>{ order.createdAt.substring(0, 10) }</td>
+                  <td>${ order.totalPrice }</td>
                   <td>
                     { order.isPaid ? (
                         order.paidAt.substring(0, 10)
@@ -140,7 +141,7 @@ const ProfileScreen = () => {
                   </td>
                   <td>
                     { order.isDelivered ? (
-                        order.DeliveredAt.substring(0, 10)
+                        order.deliveredAt?.substring(0, 10)
                     ) : (
                         <FaTimes style={{ color: 'red' }} />
                     )}
