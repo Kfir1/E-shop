@@ -5,10 +5,8 @@ import {
       Col,
       ListGroup,
       Image,
-      Form,
       Button,
       Card,
-      ListGroupItem, 
 } from "react-bootstrap";
 import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
@@ -89,13 +87,13 @@ const OrderScreen = () => {
         }
        });
     }
-    async function onApproveTest() {
-      // not getting details from paypal on this funcion, so set it to object with payer key with empty object
-      await payOrder({ orderId, details: { payer: {} } });
-      // refetch data and mark order as paid instead of not paid
-      refetch();
-      toast.success('Payment successful');
-    }
+    // async function onApproveTest() {
+    //   // not getting details from paypal on this funcion, so set it to object with payer key with empty object
+    //   await payOrder({ orderId, details: { payer: {} } });
+    //   // refetch data and mark order as paid instead of not paid
+    //   refetch();
+    //   toast.success('Payment successful');
+    // }
 
     function onError(err) {
       toast.error(err.message);
