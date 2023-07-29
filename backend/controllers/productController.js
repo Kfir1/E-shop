@@ -81,6 +81,30 @@ const updateProduct = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error('Resource not found');
     }
-}); // a for updateProduct is created on productRoutes
+}); // a route for updateProduct is created on productRoutes
 
-export { getProducts, getProductsById, createProduct, updateProduct };
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
+const deleteProduct = asyncHandler(async (req, res) => {
+    // find the product to update by id
+    const product = await Product.findById(req.params.id);
+
+    // if product exist then update the fields coming from the form
+    if (product) {
+      await Product.deleteOne({ _id: product._id });
+      res.status(200).json({ message: 'Product deleted' })
+    } else { // if product not found then throw error
+      res.status(404);
+      throw new Error('Resource not found');
+    }
+}); // a route for updateProduct is created on productRoutes
+
+
+export {
+   getProducts,
+   getProductsById,
+   createProduct,
+   updateProduct,
+   deleteProduct,
+};
