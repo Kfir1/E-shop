@@ -39,7 +39,28 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',  // GET by default  
             }),
             providesTags: ['Users'], // this will ensure no need to reload page after deleting user, will remove user from cache
-            keepUnusedDataFor: 5
+            keepUnusedDataFor: 5,
+        }),
+        deleteUser: builder.mutation({
+            query: (userId) => ({
+                url: `${USERS_URL}/${userId}`,
+                method: 'DELETE',
+            }),
+        }),
+        getUserDetails: builder.query({ // get user details for the page
+            query: (userId) => ({
+                url: `${USERS_URL}/${userId}`,
+                // GET by default
+            }),
+            keepUnusedDataFor: 5,
+        }),
+        updateUser: builder.mutation({ // to update user details
+            query: (data) => ({ // passing all data - it has userId in it. can pass userId also but if other data needed in like in UserEditScreen it will not be available
+                url: `${USERS_URL}/${data.userId}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['Users'],
         }),
     }),
 });
@@ -50,5 +71,8 @@ export const {
        useRegisterMutation,
        useProfileMutation,
        useGetUsersQuery,
+       useDeleteUserMutation,
+       useGetUserDetailsQuery,
+       useUpdateUserMutation,
      } = usersApiSlice;
 
