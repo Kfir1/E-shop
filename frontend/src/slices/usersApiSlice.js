@@ -31,8 +31,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/profile`,
                 method: 'PUT',
                 body: data,
-            }) 
-        })
+            }),
+        }),
+        getUsers: builder.query({
+            query: () => ({
+                url: USERS_URL,  // can write with or without backticks `${USERS_URL}`
+                method: 'GET',  // GET by default  
+            }),
+            providesTags: ['Users'], // this will ensure no need to reload page after deleting user, will remove user from cache
+            keepUnusedDataFor: 5
+        }),
     }),
 });
 
@@ -41,5 +49,6 @@ export const {
        useLogoutMutation,
        useRegisterMutation,
        useProfileMutation,
+       useGetUsersQuery,
      } = usersApiSlice;
 

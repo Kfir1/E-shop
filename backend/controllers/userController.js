@@ -132,28 +132,83 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-    res.send('get users');
+    // find({}) with an empty object cause need all users
+    // User - user mongoose model 
+    const users = await User.find({});
+    res.status(200).json(users);
 });
 
 // @desc    Get users by ID
 // @route   GET /api/users/:id
 // @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
-    res.send('get user by id');
+    // find user by id and pass in the id from the URL (req.params.id)
+    // no need for password so select('-password')
+    const user = await User.findById(req.params.id).select('-password');
+
+    if (user) {
+        res.status(200).json(user);
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
 });
 
 // @desc    Delete users
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
 const deleteUser = asyncHandler(async (req, res) => {
-    res.send('delete user');
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        // nested if to prevent deleting user if he is an ADMIN
+        if (user.isAdmin) {
+            // 400 is client error
+            res.status(400);
+            throw new Error('Cannot delete admin user');
+        }
+        await User.deleteOne({ _id: user._id })
+        res.status(200).json({ message: 'User deleted successfully' });
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
 });
 
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
-    res.send('update user');
+    // get user by id
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        // if user exists update his name to the name from the req.body.name
+        // or if user exists, but no name field in req.body.name then keep what in user.name
+        // same for email
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = Boolean(req.body.isAdmin);  // create new Boolean object. ensure isAdmin is a Boolean value
+        // taken from userModel.js file
+        // isAdmin: {
+        //     type: Boolean,
+        //     required: true,
+        //     default: false,
+        // },
+
+        // save to data base
+        const updateUser = await user.save();
+
+        res.status(200).json({
+            _id: updateUser._id,
+            name: updateUser.name,
+            email: updateUser.email,
+            isAdmin: updateUser.isAdmin,
+        });
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
 });
 
 export {
