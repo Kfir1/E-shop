@@ -5,7 +5,11 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
 import { toast} from "react-toastify";
-import { useUpdateProductMutation, useGetProductDetailsQuery } from "../../slices/productsApiSlice"; //need to get single product details from productsApiSlice (getProductDetails) 
+import {
+     useUpdateProductMutation,
+     useGetProductDetailsQuery,
+     useUploadProductImageMutation, 
+} from "../../slices/productsApiSlice"; //need to get single product details from productsApiSlice (getProductDetails) 
 
 const ProductEditScreen = () => {
   // id from URL and rename it to productId
@@ -34,6 +38,8 @@ const ProductEditScreen = () => {
   useUpdateProductMutation();
 
   const navigate = useNavigate();
+
+  const [uploadProductImage, { isLoading: loadingUpload }] = useUploadProductImageMutation();
 
   useEffect(() => {
     // if product exist will set all the state
@@ -71,7 +77,23 @@ const ProductEditScreen = () => {
         toast.success('Product updated');
         navigate('/admin/productlist');
     }
-  }
+  };
+
+  const uploadFileHandler = async (e) => {
+    // create FormData object
+    const formData = new FormData();
+    // argument1 is 'image', argument2 is the actual image object
+    // files[0] - files is an array, cause uploading 1 image - first place in the array chosen
+    formData.append('image', e.target.files[0]);
+    try {
+        const res = await uploadProductImage(formData).unwrap(); // unwrap cause return PROMISE
+        toast.success(res.message);
+        setImage(res.image);
+        // attention: image will be uploaded when choosing image, but will not get in data base until pressing update button
+    } catch (err) {
+        toast.error(err?.data?.message || err.error);
+    }
+  };
 
   return <>
     <Link to="/admin/productlist" className="btn btn-light my-3">
@@ -104,7 +126,20 @@ const ProductEditScreen = () => {
             ></Form.Control>
           </Form.Group>
 
-          {/*image imput placeholder */}
+          <Form.Group controlId="image" className="my-2">
+            <Form.Label>Image</Form.Label>
+            <Form.Control 
+              type="text" 
+              placeholder="Enter image url"
+              value={ image }
+              onChange={ (e) => setImage }
+              ></Form.Control>
+            <Form.Control 
+              type="file"
+              lable="choose file"
+              onChange={ uploadFileHandler }
+              ></Form.Control>
+          </Form.Group>
 
           <Form.Group controlId="brand" className='my-2'>
             <Form.Label>Brand</Form.Label>
