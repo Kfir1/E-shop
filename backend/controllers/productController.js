@@ -5,21 +5,32 @@ import Product from "../models/productModel.js"; // product model (mongoose)
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-    const pageSize = 4;
+    const pageSize = 8;
     // get page number from the URL or 1 if not exist
     // req.query to get the info (query param) about page.
     // pageNumber is arbitrary name 
     // casting to a Number()
     const page = Number(req.query.pageNumber) || 1;
+
+    // use regex to match keyword anywhere in the name of product
+    // for example iphone 10 is a product and I typed iphone - still want a match
+    // $options: 'i' make it case insensitive
+    // : {}  empty object cause keyword does not exist
+    const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: 'i' }} : {};
+
     // get total number of pages with mongoose method countDocuments()
     // this method acts on models. in this case on Product Model
-    const count = await Product.countDocuments();
+    // implement keyword in count. if keyword exist - will limit the count
+    // so, pass in keyword object
+    const count = await Product.countDocuments({...keyword});
 
 
     // gets all products {empty object} by id 
     // limit the number of pages
     // skip() - skip pages - if 3 then skip 1 and 2 for example
-    const products = await Product.find({}).limit(pageSize).skip(pageSize * (page - 1));
+    // pass keyword object instead of all product with {} empty array 
+    // to find products with the specific keyword 
+    const products = await Product.find({...keyword}).limit(pageSize).skip(pageSize * (page - 1));
     // passing object with the products, page and pages
     res.json({products, page, pages: Math.ceil(count / pageSize)});
 });

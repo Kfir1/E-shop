@@ -7,10 +7,13 @@ import Paginate from '../components/Paginate';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
  
 const HomeScreen = () => {
-  // get pageNumber dynamically from URL to pass it later to useGetProductsQuery()
-  const { pageNumber } = useParams();
+  // get pageNumber + keyword dynamically from URL to pass it later to useGetProductsQuery()
+  const { pageNumber, keyword } = useParams();
   // data includes products, page, pageSize object from the productController.js
-  const { data, isLoading, error } = useGetProductsQuery({ pageNumber });
+  const { data, isLoading, error } = useGetProductsQuery({
+     keyword,
+    pageNumber
+   });
   
 
   return (
@@ -31,6 +34,7 @@ const HomeScreen = () => {
               <Paginate
                 pages={data.pages}
                 page={data.page}
+                keyword= {keyword ? keyword : ''} /* if keyword as prop is keyword then do keyword else empty string. this get next match keyword after clicking next page if there is matches to keyword search on next page*/
               />
        </>) }
 
