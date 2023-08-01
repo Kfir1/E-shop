@@ -174,6 +174,18 @@ const createProductReview = asyncHandler(async (req, res) => {
 }); 
 
 
+// @desc    GET a top rated product
+// @route   GET /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  // get all products findById({}) - by passing {empty object}
+  // sort it by rating and limit to 3 products - get top 3
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  
+  res.status(200).json(products);
+  });
+
+
 export {
    getProducts,
    getProductsById,
@@ -181,4 +193,5 @@ export {
    updateProduct,
    deleteProduct,
    createProductReview, // added route - in productRoutes
+   getTopProducts, // added route - in productRoutes,  need to create query on productSlice on frontend
 };
