@@ -5,7 +5,7 @@ import Product from "../models/productModel.js"; // product model (mongoose)
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-    const pageSize = 2;
+    const pageSize = 4;
     // get page number from the URL or 1 if not exist
     // req.query to get the info (query param) about page.
     // pageNumber is arbitrary name 

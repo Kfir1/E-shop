@@ -1,8 +1,10 @@
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import { FaEdit, FaTrash } from  "react-icons/fa";
+import { useParams } from "react-router-dom";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
+import Paginate from "../../components/Paginate";
 import {
      useGetProductsQuery,
      useCreateProductMutation,
@@ -11,7 +13,11 @@ import {
 import { toast } from "react-toastify";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  // get pageNumber dynamically from URL to pass it later to useGetProductsQuery()
+  const { pageNumber } = useParams();
+
+  // got data instead of data.prodcuts and pass in pageNumber as an object to useGetProductsQuery
+  const { data, isLoading, error, refetch } = useGetProductsQuery({pageNumber});
 
   // get createProduct from useCreateProductMutation in productApiSlice
   const [createProduct, { isLoading: loadingCreate }] = useCreateProductMutation();
@@ -75,7 +81,7 @@ const ProductListScreen = () => {
             </tr>
             </thead>
             <tbody>
-              { products.map((product) => (
+              { data.products.map((product) => ( /*another option is data.map */
                 <tr key={ product._id }>
                   <td>{ product._id }</td>
                   <td>{ product.name }</td>
@@ -104,6 +110,7 @@ const ProductListScreen = () => {
               ))}
             </tbody>
         </Table>
+        <Paginate pages={data.pages} page={data.page} isAdmin={true}/>
       </>
     ) }
   </>
