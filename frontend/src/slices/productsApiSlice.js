@@ -6,8 +6,11 @@ import { apiSlice } from "./apiSlice";
 export const productsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProducts: builder.query({
-            query: () => ({
+            query: ({ pageNumber }) => ({ // destructure with pageNumber
                 url: PRODUCTS_URL,
+                params: { // need to pass in the pageNumber to useGetProductsQuery(pageNumber) on HomeScreen 
+                    pageNumber,
+                },
             }),
             providesTags: ['Products'], // add providesTags to prevent the case of need to refresh the page 
             keepUnusedDataFor: 5,

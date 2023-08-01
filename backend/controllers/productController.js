@@ -5,8 +5,23 @@ import Product from "../models/productModel.js"; // product model (mongoose)
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({});
-    res.json(products);
+    const pageSize = 2;
+    // get page number from the URL or 1 if not exist
+    // req.query to get the info (query param) about page.
+    // pageNumber is arbitrary name 
+    // casting to a Number()
+    const page = Number(req.query.pageNumber) || 1;
+    // get total number of pages with mongoose method countDocuments()
+    // this method acts on models. in this case on Product Model
+    const count = await Product.countDocuments();
+
+
+    // gets all products {empty object} by id 
+    // limit the number of pages
+    // skip() - skip pages - if 3 then skip 1 and 2 for example
+    const products = await Product.find({}).limit(pageSize).skip(pageSize * (page - 1));
+    // passing object with the products, page and pages
+    res.json({products, page, pages: Math.ceil(count / pageSize)});
 });
 
 
