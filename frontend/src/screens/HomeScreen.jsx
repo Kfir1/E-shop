@@ -6,6 +6,7 @@ import Message from '../components/Message';
 import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
+
  
 const HomeScreen = () => {
   // get pageNumber + keyword dynamically from URL to pass it later to useGetProductsQuery()

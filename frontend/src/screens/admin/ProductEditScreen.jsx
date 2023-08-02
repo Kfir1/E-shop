@@ -28,7 +28,6 @@ const ProductEditScreen = () => {
   const {
      data: product,
       isLoading,
-      refetch,
       error 
   } = useGetProductDetailsQuery(productId);
 
@@ -140,6 +139,8 @@ const ProductEditScreen = () => {
               onChange={ uploadFileHandler }
               ></Form.Control>
           </Form.Group>
+
+          {loadingUpload && <Loader />} {/* if loadingUpload when uploading pics of products - will show spinner (Loader component)*/}
 
           <Form.Group controlId="brand" className='my-2'>
             <Form.Label>Brand</Form.Label>
