@@ -1,5 +1,5 @@
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Col } from "react-bootstrap";
 import { FaTimes } from  "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
@@ -16,7 +16,8 @@ const OrderListScreen = () => {
       ) : error ? (
         <Message variant='danger'>{error}</Message> 
         ) : (
-        <Table striped hover responsive className="table-sm">
+        <Col>
+        <Table striped hover responsive className="table-responsive-sm">
           <thead>
             <tr>
               <th>ID</th>
@@ -60,6 +61,7 @@ const OrderListScreen = () => {
             )) }
           </tbody>
         </Table>
+        </Col>
       ) }
     </>
   );

@@ -6343,6 +6343,8 @@ fieldset:disabled .btn {
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: 100% 100%;
+  background-color: lightgreen;
+  border-radius: 50%;
 }
 
 /* rtl:options: {
