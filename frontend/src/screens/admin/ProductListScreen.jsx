@@ -28,7 +28,7 @@ const ProductListScreen = () => {
   const deleteHandler = async (id) =>{
     // verify if user really want to delete product with window message
     // press ok will enter if statement 
-    if (window.confirm('Are you sure?')) { 
+    if (window.confirm('Delete the product?')) { 
       try {
         await deleteProduct(id); 
         refetch(); // prevent need to reload page
