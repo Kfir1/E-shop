@@ -14,14 +14,16 @@ const HomeScreen = () => {
   // data includes products, page, pageSize object from the productController.js
   const { data, isLoading, error } = useGetProductsQuery({
      keyword,
-    pageNumber
+     pageNumber
    });
   
 
   return (
     <>  {/* want the carousel to show if keyword does not exist */}
         {/* if keyword exists, then show the go back button */}
-       { !keyword ? <ProductCarousel /> : ( 
+       { !keyword ? 
+       <ProductCarousel /> 
+       : ( 
        <Link to='/' className='btn btn-light mb-4'>
         Go Back
        </Link>

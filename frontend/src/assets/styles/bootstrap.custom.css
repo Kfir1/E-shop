@@ -4845,6 +4845,7 @@ fieldset:disabled .btn {
   display: flex;
   padding-left: 0;
   list-style: none;
+  justify-content: center;
 }
 
 .page-link {
