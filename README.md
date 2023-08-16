@@ -36,10 +36,10 @@ PAYPAL_CLIENT_ID = your paypal client id
 - npm install
 
 # Run
-Run frontend (:3000) & backend (:5000)
-- npm run dev
+Run frontend (:3000) + backend (:5000) 
+- npm run dev:
 
-Run backend only
+Run backend only:
 - npm run server
 
 # Pictures
