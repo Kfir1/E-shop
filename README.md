@@ -18,6 +18,9 @@ eCommerce platform built with the MERN stack & Redux.
 - PayPal / credit card integration
 - Database seeder (products & users)
 
+# Website
+https://e-shop-0mu7.onrender.com/
+
 # Pictures
 
 ![Screenshot 2023-08-13 112733](https://github.com/Kfir1/E-shop/assets/74601204/a7b2dedf-7de1-4337-ae2b-958016966619)
