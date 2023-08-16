@@ -1,5 +1,12 @@
 main {
   min-height: 80vh;
+  background: rgb(4, 1, 40);
+  background: radial-gradient(
+    circle,
+    rgba(4, 1, 40, 1) 82%,
+    rgba(115, 123, 200, 1) 96%,
+    rgba(0, 212, 255, 1) 100%
+  );
 }
 
 .rating span {
@@ -52,3 +59,12 @@ table th {
   background: rgba(0, 0, 0, 0.5);
 }
 
+.footer {
+  background: rgb(4, 1, 40);
+  background: radial-gradient(
+    circle,
+    rgba(4, 1, 40, 1) 8%,
+    rgba(115, 200, 119, 1) 57%,
+    rgba(0, 212, 255, 1) 96%
+  );
+}
