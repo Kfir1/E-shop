@@ -26,9 +26,9 @@ Create a .env file in the root and add the following
 
 - NODE_ENV = development
 - PORT = 5000
-- MONGO_URI = your ongodb URI
-- JWT_SECRET = your JWT secret string
-- PAYPAL_CLIENT_ID = your paypal client id
+- MONGO_URI = add your ongodb URI
+- JWT_SECRET = add your JWT secret string
+- PAYPAL_CLIENT_ID = add your paypal client id
 
 # Install Dependencies (frontend & backend)
 - npm install
