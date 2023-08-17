@@ -68,3 +68,9 @@ table th {
     rgba(0, 212, 255, 1) 96%
   );
 }
+
+.logo-text {
+  font-family: cursive;
+  font-style: italic;
+  color: aquamarine;
+}
