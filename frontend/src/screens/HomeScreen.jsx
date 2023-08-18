@@ -22,7 +22,10 @@ const HomeScreen = () => {
       {/* want the carousel to show if keyword does not exist */}
       {/* if keyword exists, then show the go back button */}
       {!keyword ? (
-        <ProductCarousel />
+        <>
+          <h1 style={{ color: "white" }}>Top Products</h1>
+          <ProductCarousel />
+        </>
       ) : (
         <Link to="/" className="btn btn-light mb-4">
           Go Back
@@ -36,7 +39,7 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <>
-          <h1>Latest Products</h1>
+          <h1 style={{ color: "white" }}>Latest Products</h1>
           <Row>
             {data.products.map((product) => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
